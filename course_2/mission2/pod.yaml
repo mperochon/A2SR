@@ -1,10 +1,28 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: demo
+  name: myapp
 spec:
   containers:
-  - name: testpod
-    image: alpine:3.5
-    command: ["ping", "8.8.8.8"]
-
+    - name: app
+      image: choco85470/myapp:v1
+      command: ["sh -c \"yarn install && yarn run dev\""]
+      ports:
+        - containerPort: 3000
+      workingDir: "/app"
+      env:
+        - name: MYSQL_HOST
+          value: "mysql"
+        - name: MYSQL_USER
+          value: "root"
+        - name: MYSQL_PASSWORD
+          value: "secret"
+        - name: MYSQL_DB
+          value: "todos"
+    - name: mysql
+      image: mysql:5.7
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "secret"
+        - name: MYSQL_DATABASE
+          value: "todos"
